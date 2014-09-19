@@ -560,9 +560,31 @@ describe Money do
   end
 
   describe "#coerce" do
-    it "allows mathematical operations by coercing arguments" do
-      result = 2 * Money.new(4, 'USD')
-      expect(result).to eq Money.new(8, 'USD')
+    let(:one) { Money.new(100, 'USD') }
+    let(:two) { Money.new(200, 'USD') }
+    let(:four) { Money.new(400, 'USD') }
+
+    it 'raises TypeError when adding' do
+      expect{1 + one}.to raise_error(TypeError)
+      expect{one + 1}.to raise_error(TypeError)
+    end
+
+    it 'raises TypeError when subtracting' do
+      expect{1 - one}.to raise_error(TypeError)
+      expect{one - 1}.to raise_error(TypeError)
+    end
+
+    it 'allows multiplication by a Numeric' do
+      expect(2 * two).to eq four
+      expect(two * 2).to eq four
+    end
+
+    it 'allows Money to be devided by numbers other than zero' do
+      expect(four / 2).to eq two
+    end
+
+    it 'raises TypeError when a Money is the denominator of a division' do
+      expect{4 / two}.to raise_error(TypeError)
     end
   end
 end
